@@ -1,0 +1,55 @@
+{
+    "name": "patronbase/omnipay-worldline",
+    "type": "library",
+    "description": "Worldline driver for the Omnipay payment processing library",
+    "keywords": [
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment",
+        "worldline",
+        "hosted",
+        "checkout",
+        "redirect"
+    ],
+    "homepage": "https://github.com/PatronBase/omnipay-worldline",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Leith Caldwell",
+            "email": "leith@codedruids.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Omnipay\\Worldline\\" : "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Omnipay\\Worldline\\" : "tests/" }
+    },
+    "require": {
+        "php": "^7.2|^8.0",
+        "omnipay/common": "^3.1"
+    },
+    "require-dev": {
+        "omnipay/tests": "^4.1",
+        "squizlabs/php_codesniffer": "^3.5",
+        "http-interop/http-factory-guzzle": "^1.1"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "check-style": "phpcs -p --standard=PSR2 src/",
+        "fix-style": "phpcbf -p --standard=PSR2 src/"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "3.0.x-dev"
+        }
+    },
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}

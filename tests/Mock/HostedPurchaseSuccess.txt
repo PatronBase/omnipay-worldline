@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Date: Thu, 01 May 2025 01:43:28 GMT
+Content-Length: 391
+Content-Type: application/json; charset=utf-8
+Correlation-Id: 11111111-2222-3333-4444-abcdefabcdef
+Api_Auth: true
+Strict-Transport-Security: max-age=16000000; includeSubDomains; preload;
+
+{"RETURNMAC":"11111111-2222-3333-4444-abcdefabcdef","hostedCheckoutId":"0000000001","merchantReference":"123abc","redirectUrl":"https://payment.preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/abcdef1234567890abcdef1234567890","partialRedirectUrl":"preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/abcdef1234567890abcdef1234567890"}

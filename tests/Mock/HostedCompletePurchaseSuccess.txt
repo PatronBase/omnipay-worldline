@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Date: Thu, 01 May 2025 01:43:28 GMT
+Content-Length: 1302
+Content-Type: application/json; charset=utf-8
+Correlation-Id: 11111111-2222-3333-4444-abcdefabcdef
+Api_Auth: true
+Strict-Transport-Security: max-age=16000000; includeSubDomains; preload;
+
+{"createdPaymentOutput":{"payment":{"hostedCheckoutSpecificOutput":{"hostedCheckoutId":"0000000001"},"paymentOutput":{"amountOfMoney":{"amount":145,"currencyCode":"EUR"},"references":{"merchantReference":"123abc"},"acquiredAmount":{"amount":145,"currencyCode":"EUR"},"customer":{"device":{"ipAddressCountryCode":"99"}},"cardPaymentMethodSpecificOutput":{"paymentProductId":1,"authorisationCode":"123456","card":{"cardNumber":"************1111","expiryDate":"1230","bin":"411111","countryCode":"99"},"fraudResults":{"fraudServiceResult":"no-advice","avsResult":"U","cvvResult":"M"},"schemeReferenceData":"123456789012","paymentAccountReference":"0123456789ABCDEFGHIJKLMNOPQRS","threeDSecureResults":{"version":"2.2.0","flow":"frictionless","cavv":"AAABBBCCCDDDEEEFFFZZAAAAAAA=","eci":"5","schemeEci":"05","authenticationStatus":"Y","acsTransactionId":"ABCDEF01-2345-6789-0ABC-DEF123456789","dsTransactionId":"ABCDEF01-2345-6789-0ABC-DEF012345678","xid":"ZYXWVUTSRQP000==","liability":"issuer"},"acquirerInformation":{"name":"ACQUIRER"}},"paymentMethod":"card"},"status":"PENDING_CAPTURE","statusOutput":{"isCancellable":true,"statusCategory":"PENDING_MERCHANT","statusCode":5,"isAuthorized":true,"isRefundable":false},"id":"1234567890_0"},"paymentStatusCategory":"SUCCESSFUL"},"status":"PAYMENT_CREATED"}

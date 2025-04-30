@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Date: Thu, 01 May 2025 01:43:28 GMT
+Content-Length: 757
+Content-Type: application/json; charset=utf-8
+Correlation-Id: 11111111-2222-3333-4444-abcdefabcdef
+Api_Auth: true
+Strict-Transport-Security: max-age=16000000; includeSubDomains; preload;
+
+{"createdPaymentOutput":{"payment":{"hostedCheckoutSpecificOutput":{"hostedCheckoutId":"0000000001"},"paymentOutput":{"amountOfMoney":{"amount":145,"currencyCode":"EUR"},"references":{"merchantReference":"123abc"},"acquiredAmount":{"amount":0,"currencyCode":"EUR"},"customer":{"device":{"ipAddressCountryCode":"99"}}},"status":"CANCELLED","statusOutput":{"errors":[{"errorCode":"30171001","category":"PAYMENT_PLATFORM_ERROR","code":"9999","httpStatusCode":402,"id":"CANCELLED_BY_CUSTOMER","message":"Payment cancelled by the customer.","retriable":false}],"isCancellable":false,"statusCategory":"UNSUCCESSFUL","statusCode":1,"isAuthorized":false,"isRefundable":false},"id":"1234567890_0"},"paymentStatusCategory":"REJECTED"},"status":"CANCELLED_BY_CONSUMER"}
