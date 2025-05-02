@@ -22,6 +22,10 @@ class PurchaseRequest extends AbstractRequest
     /** @var string */
     protected $testEndpoint = 'https://payment.preprod.direct.worldline-solutions.com';
 
+    /** @var string  Can be "FINAL_AUTHORIZATION" "PRE_AUTHORIZATION" or "SALE" */
+    protected $authorizationMode = 'SALE';
+    protected $requestMethod = 'POST';
+
     public function getApiKey()
     {
         return $this->getParameter('apiKey');
@@ -135,6 +139,10 @@ class PurchaseRequest extends AbstractRequest
         }
 
         $data = [
+            'cardPaymentMethodSpecificInput' => [
+                'authorizationMode' => 'SALE',
+                'transactionChannel' => 'ECOMMERCE',
+            ],
             'hostedCheckoutSpecificInput' => [
                 // if adding locale, validate locale against known formats
                 // @see https://docs.direct.worldline-solutions.com/en/integration/basic-integration-methods/hosted-checkout-page#chooselanguageversion
@@ -198,13 +206,12 @@ class PurchaseRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        $requestMethod = $this->getRequestMethod();
-        $contentType = $this->getRequestMethod() == 'POST' ? 'application/json; charset=utf-8' : '';
+        $contentType = $this->requestMethod == 'POST' ? 'application/json; charset=utf-8' : '';
         $now = new DateTime('now', new DateTimeZone('GMT'));
         $dateTime = $now->format("D, d M Y H:i:s T");
         $endpointAction = $this->getAction();
 
-        $message = $requestMethod."\n".$contentType."\n".$dateTime."\n".$endpointAction."\n";
+        $message = $this->requestMethod."\n".$contentType."\n".$dateTime."\n".$endpointAction."\n";
         $signature = $this->createSignature($message, $this->getApiSecret());
 
         $headers = [
@@ -216,7 +223,7 @@ class PurchaseRequest extends AbstractRequest
         $body = json_encode($data);
 
         $httpResponse = $this->httpClient->request(
-            $requestMethod,
+            $this->requestMethod,
             $this->getEndpoint(),
             $headers,
             $body
@@ -270,10 +277,5 @@ class PurchaseRequest extends AbstractRequest
         $money = $moneyParser->parse((string) $number, $currency);
 
         return (int) $money->getAmount();
-    }
-
-    protected function getRequestMethod()
-    {
-        return 'POST';
     }
 }

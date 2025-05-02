@@ -9,6 +9,8 @@ namespace Omnipay\Worldline\Message;
  */
 class CompletePurchaseRequest extends PurchaseRequest
 {
+    protected $requestMethod = 'GET';
+
     public function getHostedCheckoutId()
     {
         return $this->getParameter('hostedCheckoutId');
@@ -32,10 +34,5 @@ class CompletePurchaseRequest extends PurchaseRequest
     protected function getAction()
     {
         return '/v2/'.$this->getMerchantId().'/hostedcheckouts/'.$this->getHostedCheckoutId();
-    }
-
-    protected function getRequestMethod()
-    {
-        return 'GET';
     }
 }
