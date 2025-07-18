@@ -1,0 +1,9 @@
+HTTP/1.1 400 Bad Request
+Date: Thu, 01 May 2025 01:43:28 GMT
+Content-Length: 241
+Content-Type: application/json; charset=utf-8
+Correlation-Id: 11111111-2222-3333-4444-abcdefabcdef
+Api_Auth: true
+Strict-Transport-Security: max-age=16000000; includeSubDomains; preload;
+
+{"errorId":"11111111-2222-3333-4444-abcdefabcdef","errors":[{"errorCode":"50001130","category":"DIRECT_PLATFORM_ERROR","code":"1002","httpStatusCode":404,"id":"UNKNOWN_PAYMENT_ID","message":"PaymentId has a wrong syntax","retriable":false}]}

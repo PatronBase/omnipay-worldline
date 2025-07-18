@@ -1,0 +1,9 @@
+HTTP/1.1 201 Created
+Date: Thu, 01 May 2025 01:43:28 GMT
+Content-Length: 241
+Content-Type: application/json; charset=utf-8
+Correlation-Id: 11111111-2222-3333-4444-abcdefabcdef
+Api_Auth: true
+Strict-Transport-Security: max-age=16000000; includeSubDomains; preload;
+
+{"status":"REFUNDED","statusOutput":{"isCancellable":false,"statusCategory":"REFUNDED","statusCode":8,"statusCodeChangeDateTime":""},"id":"0000000001_1"}

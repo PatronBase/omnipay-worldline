@@ -65,11 +65,75 @@ class GatewayTest extends GatewayTestCase
 
         $options = array_merge($this->options, ['hostedCheckoutId' => '0000000001']);
 
-        $response = $this->gateway->completePurchase($this->options)->send();
+        $response = $this->gateway->completePurchase($options)->send();
 
         $this->assertFalse($response->isSuccessful());
         $this->assertFalse($response->isRedirect());
         $this->assertSame('1234567890_0', $response->getTransactionReference());
         $this->assertSame('CANCELLED', $response->getMessage());
+    }
+
+    public function testRefundSuccess()
+    {
+        $this->setMockHttpResponse('RefundSuccess.txt');
+
+        $options = $this->options + ['transactionReference' => '0000000001_0'];
+
+        $response = $this->gateway->refund($options)->send();
+
+        $this->assertFalse($response->isPending());
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('REFUNDED', $response->getMessage());
+        $this->assertSame(8, $response->getCode());
+        $this->assertSame('0000000001_1', $response->getTransactionReference());
+    }
+
+    public function testRefundPending()
+    {
+        $this->setMockHttpResponse('RefundPending.txt');
+
+        $options = $this->options + ['transactionReference' => '0000000001_0'];
+
+        $response = $this->gateway->refund($options)->send();
+
+        $this->assertTrue($response->isPending());
+        $this->assertFalse($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('REFUND_REQUESTED', $response->getMessage());
+        $this->assertSame(81, $response->getCode());
+        $this->assertSame('0000000001_1', $response->getTransactionReference());
+    }
+
+    public function testRefundFailure()
+    {
+        $this->setMockHttpResponse('RefundFailure.txt');
+
+        $options = $this->options + ['transactionReference' => '0000000001_0'];
+
+        $response = $this->gateway->refund($options)->send();
+
+        $this->assertFalse($response->isPending());
+        $this->assertFalse($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('11111111-2222-3333-4444-abcdefabcdef', $response->getMessage());
+        $this->assertSame('50001130', $response->getCode());
+        $this->assertNull($response->getTransactionReference());
+    }
+
+    public function testFetchTransactionSuccess()
+    {
+        $this->setMockHttpResponse('FetchTransactionSuccess.txt');
+
+        $options = $this->options + ['transactionReference' => '0000000001_0'];
+
+        $response = $this->gateway->fetchTransaction($options)->send();
+
+        $this->assertFalse($response->isPending());
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('CAPTURED', $response->getMessage());
+        $this->assertSame(9, $response->getCode());
+        $this->assertSame('0000000001_0', $response->getTransactionReference());
     }
 }

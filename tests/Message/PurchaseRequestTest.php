@@ -103,6 +103,11 @@ class PurchaseRequestTest extends TestCase
     {
         $data = $this->request->getData();
 
+        $this->assertArrayHasKey("cardPaymentMethodSpecificInput", $data);
+        $this->assertArrayHasKey("authorizationMode", $data["cardPaymentMethodSpecificInput"]);
+        $this->assertSame("SALE", $data["cardPaymentMethodSpecificInput"]['authorizationMode']);
+        $this->assertArrayHasKey("transactionChannel", $data["cardPaymentMethodSpecificInput"]);
+        $this->assertSame("ECOMMERCE", $data["cardPaymentMethodSpecificInput"]['transactionChannel']);
         $this->assertArrayHasKey("hostedCheckoutSpecificInput", $data);
         $this->assertArrayHasKey("returnUrl", $data["hostedCheckoutSpecificInput"]);
         $this->assertSame("https://www.example.com/return", $data['hostedCheckoutSpecificInput']['returnUrl']);
@@ -150,5 +155,33 @@ class PurchaseRequestTest extends TestCase
 
         $this->expectException(InvalidRequestException::class);
         $data = $request->getData();
+    }
+
+    public function testMotoTransactionChannel()
+    {
+        $params = $this->allParams;
+        $params['transactionChannel'] = 'MOTO';
+        $request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
+        $request->initialize($params);
+
+        $data = $request->getData();
+
+        $this->assertArrayHasKey("cardPaymentMethodSpecificInput", $data);
+        $this->assertArrayHasKey("transactionChannel", $data["cardPaymentMethodSpecificInput"]);
+        $this->assertSame("MOTO", $data["cardPaymentMethodSpecificInput"]['transactionChannel']);
+    }
+
+    public function testInvalidTransactionChannel()
+    {
+        $params = $this->allParams;
+        $params['transactionChannel'] = 'INVALID';
+        $request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
+        $request->initialize($params);
+
+        $data = $request->getData();
+
+        $this->assertArrayHasKey("cardPaymentMethodSpecificInput", $data);
+        $this->assertArrayHasKey("transactionChannel", $data["cardPaymentMethodSpecificInput"]);
+        $this->assertSame("ECOMMERCE", $data["cardPaymentMethodSpecificInput"]['transactionChannel']);
     }
 }
