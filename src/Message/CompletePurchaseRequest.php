@@ -7,10 +7,8 @@ namespace Omnipay\Worldline\Message;
  *
  * @see https://docs.direct.worldline-solutions.com/en/api-reference#tag/HostedCheckout/operation/GetHostedCheckoutApi
  */
-class CompletePurchaseRequest extends PurchaseRequest
+class CompletePurchaseRequest extends AbstractRequest
 {
-    protected $requestMethod = 'GET';
-
     public function getHostedCheckoutId()
     {
         return $this->getParameter('hostedCheckoutId');
@@ -23,6 +21,8 @@ class CompletePurchaseRequest extends PurchaseRequest
 
     public function getData()
     {
+        $this->validate('merchantId', 'hostedCheckoutId');
+
         return $this->httpRequest->request->all();
     }
 

@@ -2,14 +2,6 @@
 
 namespace Omnipay\Worldline\Message;
 
-use DateTime;
-use DateTimeZone;
-use Money\Currency;
-use Money\Number;
-use Money\Parser\DecimalMoneyParser;
-use Omnipay\Common\Message\AbstractRequest;
-use Omnipay\Common\Exception\InvalidRequestException;
-
 /**
  * Worldline Purchase Request
  *
@@ -17,34 +9,9 @@ use Omnipay\Common\Exception\InvalidRequestException;
  */
 class PurchaseRequest extends AbstractRequest
 {
-    /** @var string */
-    protected $liveEndpoint = 'https://payment.direct.worldline-solutions.com';
-    /** @var string */
-    protected $testEndpoint = 'https://payment.preprod.direct.worldline-solutions.com';
-
     /** @var string  Can be "FINAL_AUTHORIZATION" "PRE_AUTHORIZATION" or "SALE" */
     protected $authorizationMode = 'SALE';
     protected $requestMethod = 'POST';
-
-    public function getApiKey()
-    {
-        return $this->getParameter('apiKey');
-    }
-
-    public function setApiKey($value)
-    {
-        return $this->setParameter('apiKey', $value);
-    }
-
-    public function getApiSecret()
-    {
-        return $this->getParameter('apiSecret');
-    }
-
-    public function setApiSecret($value)
-    {
-        return $this->setParameter('apiSecret', $value);
-    }
 
     public function getAvailablePaymentProducts()
     {
@@ -70,16 +37,6 @@ class PurchaseRequest extends AbstractRequest
     public function setExcludedPaymentProducts($value)
     {
         return $this->setParameter('excludedPaymentProducts', $value);
-    }
-
-    public function getMerchantId()
-    {
-        return $this->getParameter('merchantId');
-    }
-
-    public function setMerchantId($value)
-    {
-        return $this->setParameter('merchantId', $value);
     }
 
     public function getMerchantName()
@@ -115,6 +72,22 @@ class PurchaseRequest extends AbstractRequest
         return $this->setParameter('sessionTimeout', $value);
     }
 
+    public function getTransactionChannel()
+    {
+        return $this->getParameter('transactionChannel');
+    }
+
+    /**
+     * Transaction channel can only be either 'ECOMMERCE' or 'MOTO'
+     */
+    public function setTransactionChannel($value)
+    {
+        if (!in_array($value, ['ECOMMERCE', 'MOTO'])) {
+            $value = null;
+        }
+        return $this->setParameter('transactionChannel', $value);
+    }
+
     public function getData()
     {
         $this->validate('merchantId', 'amount', 'currency');
@@ -140,8 +113,8 @@ class PurchaseRequest extends AbstractRequest
 
         $data = [
             'cardPaymentMethodSpecificInput' => [
-                'authorizationMode' => 'SALE',
-                'transactionChannel' => 'ECOMMERCE',
+                'authorizationMode' => $this->authorizationMode ?? 'SALE',
+                'transactionChannel' => $this->getTransactionChannel() ?? 'ECOMMERCE',
             ],
             'hostedCheckoutSpecificInput' => [
                 // if adding locale, validate locale against known formats
@@ -199,83 +172,13 @@ class PurchaseRequest extends AbstractRequest
         return $data;
     }
 
-    public function getEndpoint()
-    {
-        return ($this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint).$this->getAction();
-    }
-
-    public function sendData($data)
-    {
-        $contentType = $this->requestMethod == 'POST' ? 'application/json; charset=utf-8' : '';
-        $now = new DateTime('now', new DateTimeZone('GMT'));
-        $dateTime = $now->format("D, d M Y H:i:s T");
-        $endpointAction = $this->getAction();
-
-        $message = $this->requestMethod."\n".$contentType."\n".$dateTime."\n".$endpointAction."\n";
-        $signature = $this->createSignature($message, $this->getApiSecret());
-
-        $headers = [
-            'Content-Type' => $contentType,
-            'Authorization' => 'GCS v1HMAC:'.$this->getApiKey().':'.$signature,
-            'Date' => $dateTime,
-        ];
-
-        $body = json_encode($data);
-
-        $httpResponse = $this->httpClient->request(
-            $this->requestMethod,
-            $this->getEndpoint(),
-            $headers,
-            $body
-        );
-
-        return $this->createResponse($httpResponse->getBody()->getContents());
-    }
-
     protected function createResponse($data)
     {
         return $this->response = new PurchaseResponse($this, json_decode($data));
     }
 
-    /**
-     * Create signature hash used to verify messages
-     *
-     * @param string $message  The message to encrypt
-     * @param string $key      The base64-encoded key used to encrypt the message
-     *
-     * @return string Generated signature
-     */
-    protected function createSignature($message, $key)
-    {
-        return base64_encode(hash_hmac('sha256', $message, $key, true));
-    }
-
     protected function getAction()
     {
         return '/v2/'.$this->getMerchantId().'/hostedcheckouts';
-    }
-
-    /**
-     * Get integer version (sallest unit) of item price
-     *
-     * Copied from {@see AbstractRequest::getAmountInteger()} & {@see AbstractRequest::getMoney()}
-     */
-    protected function getItemPriceInteger($item)
-    {
-        $currencyCode = $this->getCurrency() ?: 'USD';
-        $currency = new Currency($currencyCode);
-        $amount = $item->getPrice();
-
-        $moneyParser = new DecimalMoneyParser($this->getCurrencies());
-        $number = Number::fromString($amount);
-        // Check for rounding that may occur if too many significant decimal digits are supplied.
-        $decimal_count = strlen($number->getFractionalPart());
-        $subunit = $this->getCurrencies()->subunitFor($currency);
-        if ($decimal_count > $subunit) {
-            throw new InvalidRequestException('Amount precision is too high for currency.');
-        }
-        $money = $moneyParser->parse((string) $number, $currency);
-
-        return (int) $money->getAmount();
     }
 }

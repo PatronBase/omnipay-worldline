@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Date: Thu, 01 May 2025 01:43:28 GMT
+Content-Length: 1234
+Content-Type: application/json; charset=utf-8
+Correlation-Id: 11111111-2222-3333-4444-abcdefabcdef
+Api_Auth: true
+Strict-Transport-Security: max-age=16000000; includeSubDomains; preload;
+
+{"paymentOutput":{"amountOfMoney":{"amount":145,"currencyCode":"EUR"},"references":{"merchantReference":"123abc"},"acquiredAmount":{"amount":145,"currencyCode":"EUR"},"customer":{"device":{"ipAddressCountryCode":"99"}},"cardPaymentMethodSpecificOutput":{"paymentProductId":1,"authorisationCode":"123456789","card":{"cardNumber":"************4675","expiryDate":"1234","bin":"43302649","countryCode":"BE","cardType":"Credit","panLengthMax":19,"panLengthMin":13},"fraudResults":{"fraudServiceResult":"no-advice","avsResult":"U","cvvResult":"0"},"schemeReferenceData":"123456789012","paymentAccountReference":"ABCDEFGHIJKLMNOPQRSTUVWZYZ123","threeDSecureResults":{"eci":"1","xid":"ABCDEFGHIJKLMN=="},"acquirerInformation":{"name":"ACQUIRER"},"cobrandSelectionIndicator":"alternative"},"paymentMethod":"card"},"Operations":[{"id":"0000000001_0","amountOfMoney":{"amount":145,"currencyCode":"EUR"},"status":"CAPTURED","statusOutput":{"isCancellable":false,"statusCategory":"COMPLETED","statusCode":9,"isAuthorized":false,"isRefundable":true},"paymentMethod":"card","references":{"merchantReference":"123abc"},"operationReferences":{"merchantReference":"123abc"},"paymentProductId":1}],"status":"CAPTURED","statusOutput":{"isCancellable":false,"statusCategory":"COMPLETED","statusCode":9,"isAuthorized":false,"isRefundable":true},"id":"0000000001_0"}

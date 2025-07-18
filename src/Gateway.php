@@ -4,7 +4,9 @@ namespace Omnipay\Worldline;
 
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Worldline\Message\CompletePurchaseRequest;
+use Omnipay\Worldline\Message\FetchTransactionRequest;
 use Omnipay\Worldline\Message\PurchaseRequest;
+use Omnipay\Worldline\Message\RefundRequest;
 
 /**
  * Worldline Hosted Checkout Gateway
@@ -68,5 +70,15 @@ class Gateway extends AbstractGateway
     public function completePurchase(array $parameters = [])
     {
         return $this->createRequest(CompletePurchaseRequest::class, $parameters);
+    }
+
+    public function refund(array $parameters = [])
+    {
+        return $this->createRequest(RefundRequest::class, $parameters);
+    }
+
+    public function fetchTransaction(array $parameters = [])
+    {
+        return $this->createRequest(FetchTransactionRequest::class, $parameters);
     }
 }
