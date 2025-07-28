@@ -77,6 +77,16 @@ class PurchaseRequest extends AbstractRequest
         return $this->getParameter('transactionChannel');
     }
 
+    public function setTokenize($value)
+    {
+        return $this->setParameter('tokenize', $value);
+    }
+
+    public function getTokenize()
+    {
+        return $this->getParameter('tokenize');
+    }
+
     /**
      * Transaction channel can only be either 'ECOMMERCE' or 'MOTO'
      */
@@ -114,6 +124,7 @@ class PurchaseRequest extends AbstractRequest
         $data = [
             'cardPaymentMethodSpecificInput' => [
                 'authorizationMode' => $this->authorizationMode ?? 'SALE',
+                'tokenize' => (bool) $this->getTokenize(),
                 'transactionChannel' => $this->getTransactionChannel() ?? 'ECOMMERCE',
             ],
             'hostedCheckoutSpecificInput' => [
@@ -161,6 +172,10 @@ class PurchaseRequest extends AbstractRequest
 
         if ($this->getSessionTimeout() !== null) {
             $data['hostedCheckoutSpecificInput']['sessionTimeout'] = (int) $this->getSessionTimeout();
+        }
+
+        if ($this->getToken() !== null || $this->getCardReference() !== null) {
+            $data['cardPaymentMethodSpecificInput']['token'] = $this->getToken() ?? $this->getCardReference();
         }
 
         if ($this->getNotifyUrl() !== null) {

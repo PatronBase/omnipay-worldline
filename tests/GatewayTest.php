@@ -57,6 +57,7 @@ class GatewayTest extends GatewayTestCase
         $this->assertFalse($response->isRedirect());
         $this->assertSame('1234567890_0', $response->getTransactionReference());
         $this->assertSame('PENDING_CAPTURE', $response->getMessage());
+        $this->assertSame('12345678-90ab-cdef-1234-567890abcdef', $response->getCardReference());
     }
 
     public function testCompletePurchaseFailure()
@@ -71,6 +72,38 @@ class GatewayTest extends GatewayTestCase
         $this->assertFalse($response->isRedirect());
         $this->assertSame('1234567890_0', $response->getTransactionReference());
         $this->assertSame('CANCELLED', $response->getMessage());
+        $this->assertNull($response->getCardReference());
+    }
+
+    public function testCreateCardSuccess()
+    {
+        $this->setMockHttpResponse('HostedPurchaseSuccess.txt');
+
+        $response = $this->gateway->createCard($this->options)->send();
+
+        $this->assertFalse($response->isSuccessful());
+        $this->assertTrue($response->isRedirect());
+        $this->assertNull($response->getMessage());
+        $this->assertSame('https://payment.preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/abcdef1234567890abcdef1234567890', $response->getRedirectUrl());
+        $this->assertSame('GET', $response->getRedirectMethod());
+        $this->assertNull($response->getRedirectData());
+        $this->assertSame('0000000001', $response->getHostedCheckoutId());
+        $this->assertNull($response->getTransactionReference());
+    }
+
+    public function testCompleteCreateCardSuccess()
+    {
+        $this->setMockHttpResponse('HostedCompletePurchaseSuccess.txt');
+
+        $options = array_merge($this->options, ['hostedCheckoutId' => '0000000001']);
+
+        $response = $this->gateway->completeCreateCard($options)->send();
+
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('1234567890_0', $response->getTransactionReference());
+        $this->assertSame('PENDING_CAPTURE', $response->getMessage());
+        $this->assertSame('12345678-90ab-cdef-1234-567890abcdef', $response->getCardReference());
     }
 
     public function testRefundSuccess()

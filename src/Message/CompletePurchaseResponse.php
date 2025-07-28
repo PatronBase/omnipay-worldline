@@ -38,4 +38,14 @@ class CompletePurchaseResponse extends AbstractResponse
     {
         return $this->data->createdPaymentOutput->payment->status;
     }
+
+    /**
+     * Get the card reference (payment token) if available
+     *
+     * @return null|string
+     */
+    public function getCardReference()
+    {
+        return $this->data->createdPaymentOutput->payment->paymentOutput->cardPaymentMethodSpecificOutput->token ?? null;
+    }
 }
