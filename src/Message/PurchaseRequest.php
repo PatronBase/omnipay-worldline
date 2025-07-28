@@ -114,6 +114,7 @@ class PurchaseRequest extends AbstractRequest
         $data = [
             'cardPaymentMethodSpecificInput' => [
                 'authorizationMode' => $this->authorizationMode ?? 'SALE',
+                'tokenize' => (bool) $this->getCreateToken(),
                 'transactionChannel' => $this->getTransactionChannel() ?? 'ECOMMERCE',
             ],
             'hostedCheckoutSpecificInput' => [
@@ -161,6 +162,10 @@ class PurchaseRequest extends AbstractRequest
 
         if ($this->getSessionTimeout() !== null) {
             $data['hostedCheckoutSpecificInput']['sessionTimeout'] = (int) $this->getSessionTimeout();
+        }
+
+        if ($this->getToken() !== null || $this->getCardReference() !== null) {
+            $data['cardPaymentMethodSpecificInput']['token'] = $this->getToken() ?? $this->getCardReference();
         }
 
         if ($this->getNotifyUrl() !== null) {

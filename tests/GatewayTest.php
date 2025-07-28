@@ -57,6 +57,7 @@ class GatewayTest extends GatewayTestCase
         $this->assertFalse($response->isRedirect());
         $this->assertSame('1234567890_0', $response->getTransactionReference());
         $this->assertSame('PENDING_CAPTURE', $response->getMessage());
+        $this->assertSame('12345678-90ab-cdef-1234-567890abcdef', $response->getCardReference());
     }
 
     public function testCompletePurchaseFailure()
@@ -71,6 +72,7 @@ class GatewayTest extends GatewayTestCase
         $this->assertFalse($response->isRedirect());
         $this->assertSame('1234567890_0', $response->getTransactionReference());
         $this->assertSame('CANCELLED', $response->getMessage());
+        $this->assertNull($response->getCardReference());
     }
 
     public function testRefundSuccess()

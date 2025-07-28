@@ -106,6 +106,8 @@ class PurchaseRequestTest extends TestCase
         $this->assertArrayHasKey("cardPaymentMethodSpecificInput", $data);
         $this->assertArrayHasKey("authorizationMode", $data["cardPaymentMethodSpecificInput"]);
         $this->assertSame("SALE", $data["cardPaymentMethodSpecificInput"]['authorizationMode']);
+        $this->assertArrayHasKey("tokenize", $data["cardPaymentMethodSpecificInput"]);
+        $this->assertFalse($data["cardPaymentMethodSpecificInput"]['tokenize']);
         $this->assertArrayHasKey("transactionChannel", $data["cardPaymentMethodSpecificInput"]);
         $this->assertSame("ECOMMERCE", $data["cardPaymentMethodSpecificInput"]['transactionChannel']);
         $this->assertArrayHasKey("hostedCheckoutSpecificInput", $data);
@@ -155,6 +157,48 @@ class PurchaseRequestTest extends TestCase
 
         $this->expectException(InvalidRequestException::class);
         $data = $request->getData();
+    }
+
+    public function testCardReference()
+    {
+        $params = $this->allParams;
+        $params['cardReference'] = '12345678-90ab-cdef-1234-567890abcdef';
+        $request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
+        $request->initialize($params);
+
+        $data = $request->getData();
+
+        $this->assertArrayHasKey("cardPaymentMethodSpecificInput", $data);
+        $this->assertArrayHasKey("token", $data["cardPaymentMethodSpecificInput"]);
+        $this->assertSame('12345678-90ab-cdef-1234-567890abcdef', $data["cardPaymentMethodSpecificInput"]['token']);
+    }
+
+    public function testToken()
+    {
+        $params = $this->allParams;
+        $params['token'] = '12345678-90ab-cdef-1234-567890abcdef';
+        $request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
+        $request->initialize($params);
+
+        $data = $request->getData();
+
+        $this->assertArrayHasKey("cardPaymentMethodSpecificInput", $data);
+        $this->assertArrayHasKey("token", $data["cardPaymentMethodSpecificInput"]);
+        $this->assertSame('12345678-90ab-cdef-1234-567890abcdef', $data["cardPaymentMethodSpecificInput"]['token']);
+    }
+
+    public function testCreateToken()
+    {
+        $params = $this->allParams;
+        $params['createToken'] = true;
+        $request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
+        $request->initialize($params);
+
+        $data = $request->getData();
+
+        $this->assertArrayHasKey("cardPaymentMethodSpecificInput", $data);
+        $this->assertArrayHasKey("tokenize", $data["cardPaymentMethodSpecificInput"]);
+        $this->assertTrue($data["cardPaymentMethodSpecificInput"]['tokenize']);
     }
 
     public function testMotoTransactionChannel()

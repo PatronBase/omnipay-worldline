@@ -54,6 +54,16 @@ abstract class AbstractRequest extends BaseAbstractRequest
         return $this->setParameter('merchantId', $value);
     }
 
+    public function getCreateToken()
+    {
+        return $this->getParameter('createToken');
+    }
+
+    public function setCreateToken($value)
+    {
+        return $this->setParameter('createToken', $value);
+    }
+
     public function getEndpoint()
     {
         return ($this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint).$this->getAction();
