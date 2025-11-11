@@ -10,6 +10,16 @@ use Omnipay\Common\Message\AbstractResponse;
 class CompletePurchaseResponse extends AbstractResponse
 {
     /**
+     * Is the response pending?
+     *
+     * @return boolean
+     */
+    public function isPending()
+    {
+        return $this->data->createdPaymentOutput->payment->statusOutput->statusCategory == 'PENDING_PAYMENT';
+    }
+
+    /**
      * Is the response successful?
      *
      * @return boolean
@@ -46,6 +56,7 @@ class CompletePurchaseResponse extends AbstractResponse
      */
     public function getCardReference()
     {
-        return $this->data->createdPaymentOutput->payment->paymentOutput->cardPaymentMethodSpecificOutput->token ?? null;
+        return $this->data->createdPaymentOutput->payment->paymentOutput->cardPaymentMethodSpecificOutput->token
+            ?? null;
     }
 }

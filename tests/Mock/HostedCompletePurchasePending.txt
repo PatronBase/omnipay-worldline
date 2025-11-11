@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Date: Thu, 14 Nov 2025 12:34:56 GMT
+Content-Length: 1302
+Content-Type: application/json; charset=utf-8
+Correlation-Id: 11111111-2222-3333-4444-abcdefabcdef
+Api_Auth: true
+Strict-Transport-Security: max-age=16000000; includeSubDomains; preload;
+
+{"createdPaymentOutput":{"payment":{"hostedCheckoutSpecificOutput":{"hostedCheckoutId":"0000000001"},"paymentOutput":{"amountOfMoney":{"amount":145,"currencyCode":"EUR"},"references":{"merchantReference":"123abc"},"acquiredAmount":{"amount":0,"currencyCode":"EUR"},"customer":{"device":{"ipAddressCountryCode":"99"}},"cardPaymentMethodSpecificOutput":{"paymentProductId":1,"card":{"cardNumber":"************1111","expiryDate":"1234","bin":"411111","countryCode":"NZ","cardType":"Credit","cardCorporateIndicator":false,"cardEffectiveDateIndicator":"1","cardEffectiveDate":"2013-11-15","cardPanType":"pan","cardProductCode":"F","cardProductName":"Visa Classic","cardProductUsageLabel":"credit","cardScheme":"Visa","issuerRegionCode":"c","issuingCountryCode":"NZ","panLuhnCheck":"1","panLengthMax":"16","panLengthMin":"16"},"fraudResults":{"fraudServiceResult":"no-advice","cvvResult":"P"},"threeDSecureResults":{"version":"2.2.0","flow":"frictionless","eci":"7","xid":"ZYXWVUTSRQP000=="},"acquirerInformation":{"name":"ACQUIRER"},"cobrandSelectionIndicator":"alternative"},"paymentMethod":"card"},"status":"REDIRECTED","statusOutput":{"isCancellable":false,"statusCategory":"PENDING_PAYMENT","statusCode":46,"isAuthorized":false,"isRefundable":false},"id":"1234567890"},"paymentStatusCategory":"STATUS_UNKNOWN"},"status":"PAYMENT_CREATED"}

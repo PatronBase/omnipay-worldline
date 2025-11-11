@@ -53,11 +53,28 @@ class GatewayTest extends GatewayTestCase
 
         $response = $this->gateway->completePurchase($options)->send();
 
+        $this->assertFalse($response->isPending());
         $this->assertTrue($response->isSuccessful());
         $this->assertFalse($response->isRedirect());
         $this->assertSame('1234567890_0', $response->getTransactionReference());
         $this->assertSame('PENDING_CAPTURE', $response->getMessage());
         $this->assertSame('12345678-90ab-cdef-1234-567890abcdef', $response->getCardReference());
+    }
+
+    public function testCompletePurchasePending()
+    {
+        $this->setMockHttpResponse('HostedCompletePurchasePending.txt');
+
+        $options = array_merge($this->options, ['hostedCheckoutId' => '0000000001']);
+
+        $response = $this->gateway->completePurchase($options)->send();
+
+        $this->assertTrue($response->isPending());
+        $this->assertFalse($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('1234567890', $response->getTransactionReference());
+        $this->assertSame('REDIRECTED', $response->getMessage());
+        $this->assertNull($response->getCardReference());
     }
 
     public function testCompletePurchaseFailure()
@@ -68,6 +85,7 @@ class GatewayTest extends GatewayTestCase
 
         $response = $this->gateway->completePurchase($options)->send();
 
+        $this->assertFalse($response->isPending());
         $this->assertFalse($response->isSuccessful());
         $this->assertFalse($response->isRedirect());
         $this->assertSame('1234567890_0', $response->getTransactionReference());
